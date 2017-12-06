@@ -1,0 +1,21 @@
+{
+  "name": "pomelo-ts",
+  "version": "0.0.1",
+  "description": "typescript types for pomelo",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhuyadong/pomelo-ts.git"
+  },
+  "keywords": [
+    "pomelo","ts","typescript"
+  ],
+  "author": "zhuyadong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhuyadong/pomelo-ts/issues"
+  },
+  "homepage": "https://github.com/zhuyadong/pomelo-ts#readme"
+}
