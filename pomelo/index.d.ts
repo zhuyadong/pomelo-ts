@@ -85,12 +85,12 @@ export const session: (app: Application, opts?: object) => SessionComponent;
 export const filters: {
   readonly serial: (timeout: number) => HandlerFilter;
   readonly time: () => HandlerFilter;
-  readonly timeout: (timeout: number, maxSize: number) => HandlerFilter;
+  readonly timeout: (timeout?: number, maxSize?: number) => HandlerFilter;
   readonly toobusy: (maxLag: number) => HandlerFilter;
 };
 export const serial: (timeout: number) => HandlerFilter;
 export const time: () => HandlerFilter;
-export const timeout: (timeout: number, maxSize: number) => HandlerFilter;
+export const timeout: (timeout?: number, maxSize?: number) => HandlerFilter;
 export const toobusy: (maxLag: number) => HandlerFilter;
 
 export const rpcFilters: {
@@ -98,7 +98,7 @@ export const rpcFilters: {
   readonly toobusy: (maxLag: number) => RPCFilter;
 };
 
-export function createApp(opts: object): Application;
+export function createApp(opts?: object): Application;
 
 export interface Application {
   init(opts: object): void;
@@ -135,6 +135,7 @@ export interface Application {
   enable(setting: string): Application;
   disable(setting: string): Application;
   configure(env: string, type: string, fn: Function): Application;
+  configure(env: string, fn: Function): Application;
   registerAdmin(moduleId: string, module: object, opts: object): void;
   use(plugin: { components: string }, opts: object): void;
   transaction(
