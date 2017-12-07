@@ -1,4 +1,3 @@
-//import { Socket } from "net";
 import { EventEmitter } from "events";
 import { Socket } from "net";
 
@@ -28,8 +27,8 @@ export const connectors: {
   ) => Connector;
 };
 export const pushSchedulers: {
-  readonly direct:new(app:Application, opts?:object)=>DirectPushScheduler;
-  readonly buffer:new(app:Application, opts?:object)=>BufferPushScheduler;
+  readonly direct: new (app: Application, opts?: object) => DirectPushScheduler;
+  readonly buffer: new (app: Application, opts?: object) => BufferPushScheduler;
 };
 export const events: {
   readonly ADD_SERVERS: string;
@@ -127,8 +126,8 @@ export interface Application {
   afterStart(cb: Function): void;
   stop(force?: boolean): void;
   set(setting: string, val?: any, attach?: boolean): Application | any;
-  get(key:'channelService'):ChannelService;
-  get(key:'sessionService'):SessionService;
+  get(key: "channelService"): ChannelService;
+  get(key: "sessionService"): SessionService;
   get(setting: string): any;
   enabled(setting: string): boolean;
   disabled(setting: string): boolean;
@@ -145,12 +144,12 @@ export interface Application {
     retry: number
   ): void;
   getMaster(): MasterInfo;
-  readonly master:MasterInfo;
+  readonly master: MasterInfo;
   getCurServer(): ServerInfo;
   getServerId(): string | number;
   getServerType(): string | number;
   getServers(): { [key: string]: ServerInfo };
-  readonly servers:{ [key: string]: ServerInfo };
+  readonly servers: { [key: string]: ServerInfo };
   getServersFromConfig(): { [key: string]: ServerInfo };
   getServerTypes(): Array<string | number>;
   getServerById(serverId: string | number): ServerInfo;
@@ -206,6 +205,7 @@ export interface BackendSession {
   push(key: string, cb: Function): void;
   pushAll(cb: Function): void;
   export(): { [name: string]: any };
+  uid: string;
 }
 
 export interface BackendSessionService {
@@ -238,10 +238,12 @@ export interface Channel {
   add(uid: number, sid: string): boolean;
   leave(uid: number, sid: string): boolean;
   getUserAmount(): number;
-  getMembers(): Array<object>;
-  getMember(uid: string): object;
+  getMembers(): Array<{ sid: string; [idx: string]: any }>;
+  getMember(uid: string): { sid: string; [idx: string]: any };
   destroy(): void;
-  pushMessage(route: string, msg: object, opts: object, cb: Function): void;
+  pushMessage(route: string, msg: object, opts: object, cb?: Function): void;
+  pushMessage(msg: object, opts: object, cb?: Function): void;
+  pushMessage(msg: object, cb?: Function): void;
 }
 
 export interface ChannelService {
@@ -253,9 +255,20 @@ export interface ChannelService {
   pushMessageByUids(
     route: string,
     msg: object,
-    uids: Array<{ uid: number; sid: string }>,
+    uids: Array<{ uid: string; sid: string }>,
     opts: object,
     cb: Function
+  ): void;
+  pushMessageByUids(
+    msg: object,
+    uids: Array<{ uid: string; sid: string }>,
+    opts?: object,
+    cb?: Function
+  ): void;
+  pushMessageByUids(
+    msg: object,
+    uids: Array<{ uid: string; sid: string }>,
+    cb?: Function
   ): void;
   broadcast(
     stype: string,
@@ -444,12 +457,26 @@ export interface SessionComponent extends SessionService {
   readonly name: string;
 }
 export interface BufferPushScheduler {
-  new(app:Application, opts?:object):this;
-  start(cb?:Function):void;
-  stop(force:boolean, cb?:Function):void;
-  schedule(reqId:number, route:string, msg:object, recvs:Array<number|string>, opts?:object, cb?:Function):void;
+  new (app: Application, opts?: object): this;
+  start(cb?: Function): void;
+  stop(force: boolean, cb?: Function): void;
+  schedule(
+    reqId: number,
+    route: string,
+    msg: object,
+    recvs: Array<number | string>,
+    opts?: object,
+    cb?: Function
+  ): void;
 }
 export interface DirectPushScheduler {
-  new(app:Application, opts?:object):this;
-  schedule(reqId:number, route:string, msg:object, recvs:Array<number|string>, opts?:object, cb?:Function):void;
+  new (app: Application, opts?: object): this;
+  schedule(
+    reqId: number,
+    route: string,
+    msg: object,
+    recvs: Array<number | string>,
+    opts?: object,
+    cb?: Function
+  ): void;
 }
